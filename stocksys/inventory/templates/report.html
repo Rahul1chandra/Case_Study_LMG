@@ -1,0 +1,160 @@
+{% load static %}
+<html>
+
+<head>
+    <title> _ report _</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+   
+   
+   <style>
+        .bootstrap-select .dropdown-toggle .filter-option {
+            position: relative;
+        }
+
+        .table-header {
+
+            background-color: #28a745;
+        }
+
+        .span-view {
+            display: inline-block;
+            /* change the display type           */
+            margin: 10px 0;
+            /* apply the needed vertical margins */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Logged in as :: {{ user.get_username }}</a>
+            </div>
+            <button class="btn btn-danger btn-lg float-right" type="submit" onclick="calllogout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row justify-content-md-center">
+            <div class="row">
+                <span class="input-group-text"> Select Territory </span>
+                <select class="selectpicker" multiple data-live-search="true" id="territory_val">
+                    {% for country in territoryobj %}
+                    <option value="{{country.TID}}"> {{country.Tname}}</option>
+                    {% endfor %}
+                </select>
+                <div class="col">
+                </div>
+                <span class="input-group-text"> Select Item Id </span>
+                <select class="selectpicker" multiple data-live-search="true" id="territory_item">
+                    {% for itm in itemobj %}
+                    <option value="{{itm.Item}}"> {{itm.item_id}}</option>
+                    {% endfor %}
+                </select>
+                <div class="col">
+                </div>
+                <button class="btn btn-primary btn-lg float-right" type="submit" onclick="callsubmit()">Submit</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-sm">
+                <label for="male">Over all Stock</label>
+                <span class="input-group-text" id="overallstockid"> ___ </span>
+            </div>
+            <div class="col-sm">
+                <label for="male">Total Stock</label>
+                <span class="input-group-text" id="totalstockid"> ___ </span>
+            </div>
+        </div>
+        <hr><br>
+        <table class="table table-striped">
+            <thead class="table-header">
+                <tr>
+                    <th scope="col">Ware house Stock</th>
+                    <th scope="col">Store Stock</th>
+                    <th scope="col">Price Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="input-group-text" id="warehouseid"> ___ </span></td>
+                    <td><span class="input-group-text" id="storeStockid"> ___ </span></td>
+                    <td><span class="input-group-text" id="pricevalueid"> ___ </span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</body>
+<script>
+    function calllogout() {
+
+        $.ajax({
+                url: "/",
+                type: "GET",
+                data: {
+					"logoff": true
+				},
+                success: function(data) {
+                    window.location = '/';
+                },
+                error: function() {
+                    console.log("Error while processing");
+                },
+            })
+        
+
+
+
+    }
+    function callsubmit() {
+
+        //debugger;
+        if ( $('#territory_item').val() && $('#territory_val').val() ){
+        
+        //alert("submit");
+        $.ajax({
+                url: "report",
+                type: "GET",
+                data: {
+					"territorylist": $('#territory_val').val(),
+					"itemlist": $('#territory_item').val()
+				},
+                success: function(data) {
+                    // process response
+                    // price_value: 7815923.3295
+                    // sum_overall: 6079398
+                    // sum_storestock: 20
+                    // sum_totalstock: 54
+                    // sum_warehouseStock: 34
+                    $('#overallstockid').html(data.sum_overall);
+                    $('#totalstockid').html(data.sum_totalstock);
+                    $('#warehouseid').html(data.sum_warehouseStock);
+                    $('#storeStockid').html(data.sum_storestock);
+                    $('#pricevalueid').html(data.price_value);
+                    console.log(data);
+                },
+                error: function() {
+                    console.log("Error while processing");
+                },
+            })
+        }
+        else{
+            alert(" Input is missing  : Please select the input and try again");
+        }
+
+    }
+
+</script>
+
+</html>
