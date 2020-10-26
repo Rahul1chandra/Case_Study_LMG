@@ -11,6 +11,7 @@
 - Front End
   - jquery
   - css bootstrap/ custom
+-  sqlite3 (database)
   
 # ER modeling 
 ![ER-Model](https://github.com/Rahul1chandra/Case_Study_LMG/blob/main/ER_modeling.png)
