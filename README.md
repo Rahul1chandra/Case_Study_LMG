@@ -2,6 +2,8 @@
 - Project name: stocksys
 - Description: Django-Project( Report Stock - Territory) Django application automate the reporting process of Stock metric 
     - Only Authenticated user can see the report page.
+        - username/Email : admin@lmg.com
+        - password: admin@123
 
 # Development Stack
 - Python 3.8.x 
